@@ -189,19 +189,8 @@ You can access and try endpoint with postman here [API Postman](https://elements
 ```json
 {
   "Order": {
-    "OrderId": 0,
+    "OrderId": 3,
     "CustomerName": "Prabowo Teguh",
-    "Items": [
-      {
-        "ItemId": 0,
-        "ItemCode": "ION6",
-        "Description": "IONIC6",
-        "Quantity": 1,
-        "OrderId": 0,
-        "CreatedAt": "0001-01-01T00:00:00Z",
-        "UpdatedAt": "0001-01-01T00:00:00Z"
-      }
-    ],
     "OrderedAt": "0001-01-01T00:00:00Z",
     "CreatedAt": "0001-01-01T00:00:00Z",
     "UpdatedAt": "0001-01-01T00:00:00Z"
