@@ -5,8 +5,6 @@
 - Golang
 - Back-end
 - CRUD
-- Design Patterns
-- Docker Compose
 - [Gin Web Framework](https://github.com/gin-gonic/gin)
 - [GORM](https://github.com/go-gorm/gorm)
 - PostgreSQL 16
