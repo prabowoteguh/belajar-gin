@@ -188,24 +188,26 @@ You can access and try endpoint with postman here [API Postman](https://elements
 
 ```json
 {
-  "data": {
-    "id": 10000011,
-    "agency_name": "Test Agency Name",
-    "status": "waiting",
-    "is_confirmed": false,
-    "is_checked": false,
-    "rental_date": "01-02-2024",
-    "user_name": "Test7",
-    "transport_count": 7,
-    "guest_count": 7,
-    "admin_note": "qq",
-    "note": "ww",
-    "email": "777@777.test",
-    "phone": "71111111111",
-    "confirmed_at": null,
-    "created_at": "31-01-2024 22:11:15",
-    "updated_at": "31-01-2024 22:17:47"
-  }
+  "Order": {
+    "OrderId": 0,
+    "CustomerName": "Prabowo Teguh",
+    "Items": [
+      {
+        "ItemId": 0,
+        "ItemCode": "ION6",
+        "Description": "IONIC6",
+        "Quantity": 1,
+        "OrderId": 0,
+        "CreatedAt": "0001-01-01T00:00:00Z",
+        "UpdatedAt": "0001-01-01T00:00:00Z"
+      }
+    ],
+    "OrderedAt": "0001-01-01T00:00:00Z",
+    "CreatedAt": "0001-01-01T00:00:00Z",
+    "UpdatedAt": "0001-01-01T00:00:00Z"
+  },
+  "message": "Order with id 3 Has Been Successfully Updated (1 Items Updated)",
+  "success": true
 }
 ```
 
