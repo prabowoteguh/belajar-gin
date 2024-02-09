@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"net/http"
 
+	"belajar-gin/database"
+	"belajar-gin/models"
+
 	"github.com/gin-gonic/gin"
 )
 
 type Car struct {
-	CarId string `json:"car_id"`
+	ID    uint   `json:"car_id"`
 	Brand string `json:"brand"`
 	Model string `json:"model"`
 	Price int    `json:"price"`
@@ -17,6 +20,7 @@ type Car struct {
 var CarDatas = []Car{}
 
 func CreateCar(ctx *gin.Context) {
+	db := database.GetDB()
 	var newCar Car
 
 	if err := ctx.ShouldBindJSON(&newCar); err != nil {
@@ -24,42 +28,55 @@ func CreateCar(ctx *gin.Context) {
 		return
 	}
 
-	newCar.CarId = fmt.Sprintf("c%d", len(CarDatas)+1)
-	CarDatas = append(CarDatas, newCar)
+	dataCar := models.Car{
+		Brand: newCar.Brand,
+		Model: newCar.Model,
+		Price: newCar.Price,
+	}
+
+	err := db.Create(&dataCar).Error
+
+	if err != nil {
+		fmt.Println("Error creating user data:", err)
+		return
+	}
+
+	fmt.Println("New product data:", dataCar)
 
 	ctx.JSON(http.StatusBadRequest, gin.H{
-		"car": newCar,
+		"status": "Data successfully added!",
+		"car":    dataCar,
 	})
 }
 
 func UpdateCar(ctx *gin.Context) {
 	carID := ctx.Param("carID")
-	condition := false
-	var updateCar Car
+	var carParam Car
 
-	if err := ctx.ShouldBindJSON(&updateCar); err != nil {
+	db := database.GetDB()
+	car := models.Car{}
+
+	if err := ctx.ShouldBindJSON(&carParam); err != nil {
 		ctx.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	for i, car := range CarDatas {
-		if carID == car.CarId {
-			condition = true
-			CarDatas[i] = updateCar
-			CarDatas[i].CarId = carID
-			break
-		}
+	err := db.Model(&car).Where("id = ?", carID).Updates(models.Car{
+		Brand: carParam.Brand,
+		Model: carParam.Model,
+		Price: carParam.Price,
+	}).Error
+
+	if err != nil {
+		fmt.Println("Error updating car data", err)
+		return
 	}
 
-	if !condition {
-		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"error_status":  "Data not found!",
-			"error_message": fmt.Sprintf("car with id %v not found", carID),
-		})
-	}
+	fmt.Println("Car data successfully updated!", carParam)
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": fmt.Sprintf("car with id %v has been successfully updated", carID),
+	ctx.JSON(http.StatusBadRequest, gin.H{
+		"status": "Data successfully updated!",
+		"car":    carParam,
 	})
 }
 
@@ -70,7 +87,7 @@ func GetCar(ctx *gin.Context) {
 	var carData Car
 
 	for i, car := range CarDatas {
-		if carID == car.CarId {
+		if carData.ID == car.ID {
 			condition = true
 			carData = CarDatas[i]
 			break
@@ -91,49 +108,37 @@ func GetCar(ctx *gin.Context) {
 
 func DeleteCar(ctx *gin.Context) {
 	carID := ctx.Param("carID")
-	condition := false
+	db := database.GetDB()
+	car := models.Car{}
 
-	var carIndex int
+	err := db.Where("id = ?", carID).Delete(&car).Error
 
-	for i, car := range CarDatas {
-		if carID == car.CarId {
-			condition = true
-			carIndex = i
-			break
-		}
+	if err != nil {
+		fmt.Println("Error deleting car data", err)
+		return
 	}
 
-	if !condition {
-		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"error_status":  "Data not found!",
-			"error_message": fmt.Sprintf("car with id %v not found", carID),
-		})
-	}
+	fmt.Println("Car data successfully deleted!")
 
-	copy(CarDatas[carIndex:], CarDatas[carIndex+1:])
-	CarDatas[len(CarDatas)-1] = Car{}
-	CarDatas = CarDatas[:len(CarDatas)-1]
-
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": fmt.Sprintf("car with id %v has been successfully deleted", carID),
+	ctx.JSON(http.StatusBadRequest, gin.H{
+		"status": "Data successfully deleted!",
 	})
 }
 
 func GetAllCars(ctx *gin.Context) {
-	condition := false
-	if len(CarDatas) > 0 {
-		condition = true
-	}
+	db := database.GetDB()
+	var cars []Car
+	err := db.Find(&cars).Error
 
-	if !condition {
-		ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-			"message": "Data Empty",
-			"car":     CarDatas,
-		})
+	if err != nil {
+		fmt.Println("Error getting cars", err.Error())
 		return
 	}
 
+	fmt.Println("Cars data")
+	fmt.Printf("%+v", cars)
+
 	ctx.JSON(http.StatusOK, gin.H{
-		"car": CarDatas,
+		"cars": cars,
 	})
 }
