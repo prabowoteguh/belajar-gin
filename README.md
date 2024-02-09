@@ -46,7 +46,7 @@ go run migration.go
 
 ## API Endpoints
 
-You can access and try endpoint with postman [Here](https://elements.getpostman.com/redirect?entityId=11831418-0db734cb-a2d5-4d29-b4ff-17ece7139939&entityType=collection)
+You can access and try endpoint with postman here [API Postman](https://elements.getpostman.com/redirect?entityId=11831418-0db734cb-a2d5-4d29-b4ff-17ece7139939&entityType=collection)
 
 ### All Orders
 
