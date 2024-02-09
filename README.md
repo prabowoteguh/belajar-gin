@@ -1,5 +1,7 @@
 # Go Assigment Haktiv8
 
+Author: Teguh Agung Prabowo
+
 ## Topics
 
 - Golang
